@@ -1,75 +1,107 @@
-var path = require('path')
-var webpack = require('webpack')
+const {resolve} = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const url = require('url')
+const publicPath = ''
+const OpenPackPlugin = require('openpack')
 
-module.exports = {
-  entry: './src/main.js',
+module.exports = (options = {}) => ({
+  entry: {
+    vue: ['vue', 'vue-router', 'vuex', 'axios'],
+    app: './src/main.js'
+  },
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: './dist/',
-    filename: 'build.js'
+    path: resolve(__dirname, 'dist'),
+    filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
+    chunkFilename: '[name].js?[chunkhash]',
+    publicPath: options.dev ? '' : publicPath
   },
   module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
+    rules: [{
+      test: /\.vue$/,
+      use: ['vue-loader']
+    },
+    {
+      test: /\.js$/,
+      use: ['babel-loader'],
+      exclude: /node_modules/
+    },
+    {
+      test: /\.html$/,
+      use: [{
+        loader: 'html-loader',
         options: {
-          loaders: {
-            // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
-            // the "scss" and "sass" values for the lang attribute to the right configs here.
-            // other preprocessors should work out of the box, no loader config like this nessessary.
-            'scss': 'vue-style-loader!css-loader!sass-loader',
-            'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
-          }
-          // other vue-loader options go here
+          root: resolve(__dirname, 'src'),
+          attrs: ['img:src', 'link:href']
         }
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
+      }]
+    },
+    {
+      test: /\.css$/,
+      use: ['style-loader', 'css-loader', 'postcss-loader']
+    },
+    {
+      test: /\.less$/,
+      use: ['style-loader', 'css-loader', 'less-loader']
+    },
+    {
+      test: /\.s[a|c]ss$/,
+      use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
+    },
+    {
+      test: /favicon\.png$/,
+      use: [{
         loader: 'file-loader',
         options: {
-          name: '[name].[ext]'
+          name: '[name].[ext]?[hash]'
         }
-      }
-    ]
+      }]
+    },
+    {
+      test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/,
+      exclude: /favicon\.png$/,
+      use: [{
+        loader: 'url-loader',
+        options: {
+          name: 'assets/[name].[ext]?[hash]',
+          limit: 5000
+        }
+      }]
+    }]
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vue']
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html'
+    }),
+    new OpenPackPlugin({
+      lan: true
+    })
+  ],
   resolve: {
+    extensions: ['.js', '.vue', '.json'],
     alias: {
-      'vue$': 'vue/dist/vue.common.js'
+      '~': resolve(__dirname, 'src')
     }
   },
   devServer: {
-    historyApiFallback: true,
-    hot: false,
-    inline: true
+    host: '0.0.0.0',
+    disableHostCheck: true, // 为了使用本机ip访问页面，关闭host检查
+    port: 8080,
+    proxy: {
+      '/api/': {
+        target: 'http://0.0.0.0:8080/api/', // 代理的地址，注意这里最好就以api开头，如果改了下面的重写也要跟着改
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
+    historyApiFallback: {
+      index: url.parse(options.dev ? '' : publicPath).pathname
+    }
   },
-  performance: {
-    hints: false
-  }
-}
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
-  // http://vue-loader.vuejs.org/en/workflow/production.html
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    })
-  ])
-}
+  devtool: options.dev ? '#eval-source-map' : '#source-map'
+})

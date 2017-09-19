@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="format-detection" content="telephone=no, email=no">
+  <title>用户资料上传</title>
+  <style>html,body{min-height:100%;}</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+  function setRootEm() {
+    var cw = window.innerWidth;
+    cw = cw / 10;
+    //计算倍数，数值可变。
+    if (cw < 32) { cw = 32 } //最小宽度
+    if (cw > 64) { cw = 64 } //最大宽度
+    document.documentElement.style.cssText = "font-size:" + cw + "px !important";
+  }
+  setRootEm();
+  window.onresize = function () {
+    setRootEm()
+  }
+</script>
+</body>
+</html>
