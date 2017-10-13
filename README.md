@@ -1,7 +1,7 @@
 ## 调试/编译/发布
 
 1. 下载安装最新版 [nodejs](http://nodejs.cn/download/)
-2. 使用cnpm国内镜像 
+2. 使用cnpm国内镜像
 
 	```bash
 	npm install -g cnpm --registry=https://registry.npm.taobao.org
@@ -30,8 +30,7 @@
 
 ## 代码检查
 - 为了开发统一，也为了代码简洁易懂，更为了防止低级错误，项目使用了最严格代码检查`eslint standard`，详情：https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-- 强烈建议开发时使用 webstorm 编辑器，如果写了不合规范的代码，编辑器会报错，并提供修复错误代码的功能。
-- 每次build前先运行风格检查`npm run lint`，没有报错则表示没问题，`npm run lint:fix`会修复一些错误，但很多还得自己改
+- 每次build前先运行风格检查`npm run lint`，没有报错则表示没问题，`npm run lint:fix`会修复一些低级错误
 
 ## 组件库
 项目已集成了[mint-ui](https://github.com/ElemeFE/mint-ui)，提供了较丰富的基础组件，使用时请 **按需引入**
