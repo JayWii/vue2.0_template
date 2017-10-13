@@ -156,16 +156,3 @@ input, textarea, button, select { -webkit-tap-highlight-color: rgba(0,0,0,0); -w
 .purple-bg { background-color: #a776d9; }
 .light-purple, a.light-purple { color: #b394f3; }
 .light-purple-bg { background-color: #b394f3; }
-
-/*rem字体解决方案*/
-html {font-size: 20PX;}
-@media only screen and (min-width: 320px) {html {font-size: 19PX !important;}}
-@media only screen and (min-width: 375px) {html {font-size: 20PX !important;}}
-@media only screen and (min-width: 400px) {html {font-size: 21.33333333PX !important;}}
-@media only screen and (min-width: 414px) {html {font-size: 22.08PX !important;}}
-@media only screen and (min-width: 480px) {html {font-size: 25.6PX !important;}}
-html[data-rem="320"] {font-size: 20PX;}
-@media only screen and (min-width: 375px) {html[data-rem="320"] {font-size: 23.4375PX !important;}}
-@media only screen and (min-width: 400px) {html[data-rem="320"] {font-size: 25PX !important;}}
-@media only screen and (min-width: 414px) {html[data-rem="320"] {font-size: 25.875PX !important;}}
-@media only screen and (min-width: 480px) {html[data-rem="320"] {font-size: 30PX !important;}}
