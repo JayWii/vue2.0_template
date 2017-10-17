@@ -54,6 +54,8 @@
           self.$cookie.set('authorization', token, {expire: 30})
           const url = self.$route.query.redirect || '/'
           self.$router.replace(url)
+        },err=>{
+          console.log(err)
         })
       }
     }
